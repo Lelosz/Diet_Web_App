@@ -10,11 +10,12 @@ namespace WebAPI.Controllers
     [ApiController]
     public class CalculatorController : ControllerBase
     {
-        private readonly CalculatorContext _context;
+        private readonly ApplicationDbContext _context;
+        //private readonly CalculatorContext _context;
 
-        public CalculatorController(CalculatorContext context) => _context = context;
+        public CalculatorController(ApplicationDbContext context) => _context = context;
         [HttpGet]
-        public async Task<IEnumerable<Calculator>> Get()
+        public async Task<IEnumerable<CalculatorModel>> Get()
             => await _context.Calculators.ToListAsync();
 
         [HttpGet("{id}")]
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Calculator calculator)
+        public async Task<IActionResult> Create(CalculatorModel calculator)
         {
             await _context.Calculators.AddAsync(calculator);
             await _context.SaveChangesAsync();
@@ -33,7 +34,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Calculator calculator) 
+        public async Task<IActionResult> Update(int id, CalculatorModel calculator) 
         {
             if (id != calculator.Id) return BadRequest();
 
