@@ -1,30 +1,47 @@
+﻿<script setup>
+    import { ref, onMounted } from 'vue'
+    const items = ref(
+        [
+            { name: 'BMI', description: 'Opis1', link: 'BMI' },
+            { name: 'WHR', description: 'Opis2', link: 'WHR' },
+            { name: 'PPM i CPM', description: 'Opis3', link: 'PPMCPM' },
+            { name: 'Planer wagi', description: 'Opis4', link: 'WeightPlanner' },
+            { name: 'Aktywność fizyczna', description: 'Opis5', link: 'PhisicalActivity' },
+            { name: 'Kalorie z przekąsek i napojów', description: 'Opis6', link: 'FoodCalories' }
+        ]
+    )
+</script>
 
 <template>
   <v-container>
     <v-row>
       <v-col
-        v-for="(name, i) in names"
+        v-for="item in items"
         :key="i"
-        cols="4"
+        cols="6"
       >
         <v-card
           class="mx-auto"
           :variant="variant">
           <v-card-item>
             <div>
-              <div class="text-overline mb-1">
+              <!--<div class="text-overline mb-1">
                 {{ name }}
-              </div>
+              </div>-->
               <div class="text-h6 mb-1">
-                {{ descriptions[i] }}
+                  {{item.name}}
               </div>
-              <div class="text-caption"> {{ contents[i] }} </div>
+              <div class="text-caption">
+                {{item.description}}
+              </div>
             </div>
           </v-card-item>
           <v-card-actions>
-            <v-btn>
-              Skorzystaj
-            </v-btn>
+              <router-link :to="'/CalculatorList/' + item.link">
+                <v-btn class="font-weight-bold" color="green">
+                  Wypróbuj
+                </v-btn>
+              </router-link>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -32,11 +49,6 @@
   </v-container>
 </template>
 
-<script setup>
-  const names = ['bmi', 'asd', 'dsad', 'sdad', 'sads', 'sadsad', 'ased22']
-  const descriptions = ['Desc1', 'Desc2', 'Desc3', 'Desc4', 'Desc5', 'Desc6', 'Desc7']
-  const contents = ['Content1', 'Content2', 'Content3', 'Content4', 'Content5', 'Content6', 'Content7']
-</script>
 <style scoped>
       div {
         font-weight: bold;

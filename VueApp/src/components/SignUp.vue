@@ -19,11 +19,40 @@
             ],
             repeatPassword:'',
         }),
+        methods: {
+            submit() {
+                console.log(this.login)
+            }
+        }
     }
 </script>
 
 <template>
-    <v-sheet width="500" class="mx-auto">
+    <v-card class="mx-auto my-8" max-width="600">
+        <v-card-title>
+            Zarejestruj się
+        </v-card-title>
+        <v-card-text>
+            <v-form @submit.prevent="submit">
+                <v-text-field v-model="login"
+                              label="Nazwa użytkownika"
+                              :rules="loginRules"></v-text-field>
+
+                <v-text-field v-model="password"
+                              type="password"
+                              label="Hasło"
+                              :rules="passwordRules"></v-text-field>
+
+                <v-text-field v-model="repeatPassword"
+                              type="password"
+                              label="Powtórz hasło"
+                              :rules="passwordRules"></v-text-field>
+
+                <v-btn class="success mx-0 mt-3" type="submit">Zarejestruj się</v-btn>
+            </v-form>
+        </v-card-text>
+    </v-card>
+    <!--<v-sheet width="500" class="mx-auto">
         <v-form @submit.prevent="submit">
             <v-text-field v-model="login"
                           label="Nazwa użytkownika"
@@ -41,5 +70,5 @@
 
             <v-btn type="submit">Zarejestruj się</v-btn>
         </v-form>
-    </v-sheet>
+    </v-sheet>-->
 </template>
