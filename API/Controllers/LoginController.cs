@@ -36,8 +36,18 @@ namespace WebAPI.Controllers
             if (user != null)
             {
                 var token = Generate(user);
-                return Ok(token);
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true
+                });
+                return Ok(new
+                {
+                    message = "success"
+                });
             }
+
+            
+
             return NotFound("User not found");
         }
 

@@ -68,7 +68,8 @@
 
                 <v-text-field v-model="snack.value.value"
                               label="Kcal w 100 gramach"
-                              disabled
+                              variant="solo"
+                              readonly
                               v-validate:required="true"></v-text-field>
 
                 <v-text-field v-model="portionSize.value.value"

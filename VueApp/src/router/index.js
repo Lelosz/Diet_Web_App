@@ -9,6 +9,9 @@ import PhisicalActivity from '@/components/calculators/PhisicalActivity.vue'
 import FoodCalories from '@/components/calculators/FoodCalories.vue'
 import LogIn from '@/components/LogIn.vue'
 import SignUp from '@/components/SignUp.vue'
+import Report from '@/components/Report.vue'
+import UserProfile from '@/components/UserProfile.vue'
+
 
 const routes = [
   {
@@ -49,6 +52,12 @@ const routes = [
         },
         {
             path: '/SignUp', name: 'SignUp', component: SignUp
+        },
+        {
+            path: '/Report', name: 'Report', component: Report
+        },
+        {
+            path: '/UserProfile', name: 'UserProfile', component: UserProfile
         },
     ],
   },

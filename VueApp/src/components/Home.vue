@@ -1,4 +1,26 @@
-﻿<template>
+﻿<script setup>
+    import { onMounted, ref } from 'vue'
+    import store from '@/store/index.js'
+   
+    console.log(store.state.loginStatus)
+    
+    onMounted(async () => {
+        try {
+            const response = await fetch('https://localhost:7011/api/user/user', {
+                method: 'GET',
+                header: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+            
+            store.commit('loginStatus', true)
+        } catch (e) {
+            store.commit('loginStatus', false)
+        }
+    });
+
+</script>
+
+<template>
     <v-img
            aspect-ratio="16/9"
            cover
@@ -49,14 +71,4 @@
     </v-container>
 </template>
 
-<script setup>
 
-
-</script>
-<!--<template>
-  <HelloWorld />
-</template>
-
-<script setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
-</script>-->

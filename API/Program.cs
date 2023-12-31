@@ -39,8 +39,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseRouting();
+
+app.UseCors(options => options
+    .WithOrigins(new[] { "http://localhost:5173", "http://localhost:8080", "http://localhost:7011" })
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    );
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

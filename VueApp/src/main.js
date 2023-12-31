@@ -9,6 +9,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import router from './router'
 import { pl } from 'vuetify/locale'
+import store from './store/index.js'
 
 const myCustomLightTheme = {
     dark: false,
@@ -42,7 +43,7 @@ const vuetify = createVuetify({
     },
 })
 
-createApp(App).use(router).use(vuetify).mount('#app')
+createApp(App).use(router).use(vuetify).use(store).mount('#app')
 
 
 

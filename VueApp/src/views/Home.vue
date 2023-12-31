@@ -1,7 +1,5 @@
 <template>
-  <div>Siema, wybierz co chcesz zrobic</div>
-  <br />
-  <router-link to="/CalculatorList">Calculatory</router-link>
+  
 </template>
 
 <script setup>
