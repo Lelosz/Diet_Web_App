@@ -3,6 +3,8 @@
     import { useTheme } from 'vuetify';
     import store from '@/store/index.js'
 
+    
+    const loginState = computed(() => store.state.loginStatus);
     const darkTheme = ref(false);
     const theme = useTheme();
 
@@ -14,13 +16,12 @@
     
 
     const logout = async () => {
-        store.commit('loginStatus', false)
         await fetch('https://localhost:7011/api/user/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
-        
+        store.commit('loginStatus', false)
     }
 
 </script>
@@ -47,7 +48,7 @@
                 <v-icon>mdi-post</v-icon>
             </v-btn>
         </router-link>
-        <div v-if="!store.state.loginStatus">
+        <div v-if="!loginState">
             <router-link style="text-decoration: none; color: inherit;" to="/LogIn">
                 <v-btn class="font-weight-bold">
                     Zaloguj się
@@ -59,7 +60,7 @@
                 </v-btn>
             </router-link>
         </div>
-        <div v-if="store.state.loginStatus">
+        <div v-if="loginState">
             <router-link style="text-decoration: none; color: inherit;" to="/LogIn">
                 <v-btn class="font-weight-bold" @click="logout">
                     Wyloguj się

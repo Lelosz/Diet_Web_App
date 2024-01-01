@@ -63,27 +63,28 @@ namespace WebAPI.Controllers
         }
 
 
-        //[HttpGet("Administrator")]
-        //[Authorize(Roles = "Administrator")]
-        //public IActionResult AdminsEndpoint()
-        //{
-        //    var currentUser = GetCurrentUser();
-        //    return Ok(currentUser);
-        //}
+        [HttpGet("Administrator")]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult AdminsEndpoint()
+        {
+            var currentUser = GetCurrentUser();
+            return Ok(currentUser);
+        }
 
-        //[Authorize(Roles = "User")]
         [HttpGet("User")]
+        [Authorize(Roles = "User")]
         public IActionResult retrieveUserInformation()
         {
-            var token = Request.Cookies["jwt"];
-            if(token != null)
-            {
-                var currentUser = GetCurrentUser(token);
-                return Ok(currentUser);
-            }
-            return BadRequest("brak tokenu");
-            //var currentUser = GetCurrentUser();
-            //return Ok(currentUser);
+            //var token = Request.Cookies["jwt"];
+            //if (token != null)
+            //{
+            //    var currentUser = GetCurrentUser(token);
+            //    return Ok(currentUser);
+            //}
+            //return BadRequest("brak tokenu");
+
+            var currentUser = GetCurrentUser();
+            return Ok(currentUser);
         }
 
         [HttpGet("Public")]
@@ -92,27 +93,14 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        private UserModel GetCurrentUser(string token)
+        private UserModel GetCurrentUser()
         {
-            var identity = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            
-            if (identity != null)
-            {
-                var userClaims = identity.Claims;
-                return new UserModel
-                {
-                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
-                    EmailAdress = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
-                };
-            }
-            return null;
-            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //var token = Request.Cookies["jwt"];
+            //var identity = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-            //if (identity != null) 
+            //if (identity != null)
             //{
             //    var userClaims = identity.Claims;
-
             //    return new UserModel
             //    {
             //        Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
@@ -121,6 +109,21 @@ namespace WebAPI.Controllers
             //    };
             //}
             //return null;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new UserModel
+                {
+                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
+                    EmailAdress = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                };
+            }
+            return null;
         }
         }
 }

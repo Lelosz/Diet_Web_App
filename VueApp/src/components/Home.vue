@@ -1,21 +1,35 @@
 ﻿<script setup>
     import { onMounted, ref } from 'vue'
     import store from '@/store/index.js'
+    import VueCookies from 'vue-cookies'
    
-    console.log(store.state.loginStatus)
+    const message = ref('')
     
+    const authTokenValue = ref('')
     onMounted(async () => {
-        try {
-            const response = await fetch('https://localhost:7011/api/user/user', {
-                method: 'GET',
-                header: { 'Content-Type': 'application/json' },
-                credentials: 'include'
-            });
             
+        try {
+            authTokenValue.value = document.cookie.split(';').find(cookie => cookie.startsWith('token=')).split('=')[1];
+
+
+        } catch (error) {
+            console.log('brak tokenu')
+        }
+        const token = 'Bearer ' + authTokenValue.value
+        let response = await fetch('https://localhost:7011/api/user/user', {
+            method: 'GET',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json', 'Authorization': token },
+            credentials: 'include'
+        });
+        let userData = await response.json()
+        console.log(userData)
+        if (userData) {
             store.commit('loginStatus', true)
-        } catch (e) {
+        } else {
             store.commit('loginStatus', false)
         }
+        
     });
 
 </script>

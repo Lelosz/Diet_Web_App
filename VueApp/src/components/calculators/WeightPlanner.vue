@@ -55,17 +55,17 @@
     const height = useField('height')
     const activitylevel = useField('activitylevel')
     const goalWeight = useField('goalWeight')
-    const selectedDate = useField('selectedDate')
-    
+
+    const selectedDate = ref(null)
     const date = ref(new Date())
     date.value.setDate(date.value.getDate() + 1)
 
     const currentDate = new Date()
-    currentDate.setDate(currentDate.getDate() + 1)
+    currentDate.setDate(currentDate.getDate() + 2)
     const minDate = ref(currentDate.toISOString().split('T')[0])
 
-    const activityChange = useField('activityChange')
 
+    const activityChange = useField('activityChange')
     const type = useField('type')
     const intensity = useField('intensity')
     const minutes = useField('minutes')
@@ -77,8 +77,39 @@
         
     ])
 
-    let result = ref(0)
+    const goal = ref(0)
+    const maintainGoal = ref(0)
+    const maintainWeight = ref(0)
 
+    const dayToReachGoal = ref(1)
+
+    const kgKcalValue = 7700
+
+    const activityLevelChange = ref(1)
+    const totalActivityLevel= ref(1)
+    const CPM = value => {
+        totalActivityLevel.value = activitylevel.value.value * activityLevelChange.value
+        if (value == 'Mężczyzna')
+            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * totalActivityLevel.value).toFixed(0);
+        else
+            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * totalActivityLevel.value).toFixed(0);
+
+    }
+
+    const CPMGoal = value => {
+        totalActivityLevel.value = activitylevel.value.value * activityLevelChange.value
+        if (value == 'Mężczyzna')
+            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * totalActivityLevel.value).toFixed(0);
+        else
+            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * totalActivityLevel.value).toFixed(0);
+
+    }
+
+    
+    const daysToGoal = value => {
+        let Difference_In_Time = value.getTime() - new Date().getTime();
+        return Math.round(Difference_In_Time / (1000 * 3600 * 24));
+    }
 
     const verifyResult = value => {
         return value * portionSize.value.value / 100 || 0;
@@ -94,7 +125,6 @@
         id.value++;
     }
 
-    
 
     function removeItem(index) {
         items.value.splice(index, 1);
@@ -260,9 +290,32 @@
             <template v-slot:item.4>
                 <v-card title="Wynik" flat>
                     <div class="my-6">
-                        <v-card class="my-4" text="Tyle powinieneś spożywać aby utrzymać obecną wagę." title="2000 kcal" variant="outlined"></v-card>
-                        <v-card class="my-4" text="Tyle powinieneś spożywać aby osiągnąć swój cel 84 kg w czasie 64 dni." title="1700 kcal" variant="outlined"></v-card>
-                        <v-card class="my-4" text="Tyle powinieneś spożywać aby utrzymać swoją docelową wagę 80 kg." title="1900 kcal" variant="outlined"></v-card>
+                        <v-card class="my-4" variant="outlined">
+                            <div class="ma-4">
+                                <div class="text-h6 mb-1">
+                                    {{CPM(gender.value.value)}} kcal
+                                </div>
+                                <div class="text-caption">Tyle powinieneś spożywać aby utrzymać obecną wagę {{weight.value.value}}kg.</div>
+                            </div>
+                        </v-card>
+                        <v-card class="my-4" variant="outlined">
+                            <div class="ma-4">
+                                <div class="text-h6 mb-1">
+                                    {{}} kcal
+                                </div>
+                                <div class="text-caption">Tyle powinieneś spożywać aby osiągnąć swój cel:{{goalWeight.value.value}} kg w czasie {{daysToGoal(date)}} dni.</div>
+                            </div>
+                        </v-card>
+                        <v-card class="my-4" variant="outlined">
+                            <div class="ma-4">
+                                <div class="text-h6 mb-1">
+                                    {{CPMGoal(gender.value.value)}} kcal
+                                </div>
+                                <div class="text-caption">Tyle powinieneś spożywać aby utrzymać swoją docelową wagę {{goalWeight.value.value}} kg.</div>
+                            </div>
+                        </v-card>
+                        
+                        
                     </div>
                 </v-card>
             </template>
