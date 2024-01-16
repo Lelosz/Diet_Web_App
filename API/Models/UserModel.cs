@@ -8,7 +8,7 @@
         public string EmailAdress { get; set; }
         public string? Role { get; set; }
 
-        public ICollection<CalculatorModel>? Calculators { get; }
+        public ICollection<CalculatorModel> Calculators { get; } = new List<CalculatorModel>();
 
     }
 }

@@ -5,7 +5,7 @@
    
     const message = ref('')
     
-    const authTokenValue = ref('')
+    const authTokenValue = ref(0)
     onMounted(async () => {
             
         try {
@@ -15,19 +15,25 @@
         } catch (error) {
             console.log('brak tokenu')
         }
-        const token = 'Bearer ' + authTokenValue.value
-        let response = await fetch('https://localhost:7011/api/user/user', {
-            method: 'GET',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json', 'Authorization': token },
-            credentials: 'include'
-        });
-        let userData = await response.json()
-        console.log(userData)
-        if (userData) {
-            store.commit('loginStatus', true)
-        } else {
-            store.commit('loginStatus', false)
+
+        if (authTokenValue.value) {
+            console.log(authTokenValue.value)
+            const token = 'Bearer ' + authTokenValue.value
+            let response = await fetch('https://localhost:7011/api/user/user', {
+                method: 'GET',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                credentials: 'include'
+            });
+            let userData = await response.json()
+            console.log(userData)
+            if (userData) {
+                store.commit('loginStatus', true)
+                store.commit('userId', userData.id)
+            } else {
+                store.commit('loginStatus', false)
+            }
+
         }
         
     });

@@ -20,7 +20,7 @@ namespace WebAPI.Data
                 .HasMany(e => e.Calculators)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
-                .HasPrincipalKey(e => e.Id);
+                .IsRequired(false);
         }
     }
 }

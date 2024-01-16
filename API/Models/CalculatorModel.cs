@@ -3,7 +3,8 @@
     public class CalculatorModel
     {
         public int Id { get; set; }
-        public float Result{ get; set; }
+        public String Result{ get; set; }
+
         public CalculatorType CalculatorType{ get; set; }
         public DateTime Created { get; set; }
 
@@ -13,6 +14,6 @@
 
     public enum CalculatorType 
     {
-        BMI, WHR, PPM, CPM, WeightPlanner, PhysicalActivity, FoodCalories
+        BMI, WHR, PPMCPM, WeightPlanner, PhysicalActivity, FoodCalories
     }
 }

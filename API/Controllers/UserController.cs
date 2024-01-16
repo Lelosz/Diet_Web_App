@@ -8,6 +8,9 @@ using System.Net.Mail;
 using System.Security.Claims;
 using WebAPI.Data;
 using WebAPI.Models;
+using System;
+
+
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -54,7 +57,7 @@ namespace WebAPI.Controllers
         [HttpPost("Logout")]
         public IActionResult Logout()
         {
-            Response.Cookies.Delete("jwt");
+            Response.Cookies.Delete("token");
 
             return Ok(new
             {
@@ -70,6 +73,8 @@ namespace WebAPI.Controllers
             var currentUser = GetCurrentUser();
             return Ok(currentUser);
         }
+
+        
 
         [HttpGet("User")]
         [Authorize(Roles = "User")]
@@ -118,7 +123,8 @@ namespace WebAPI.Controllers
 
                 return new UserModel
                 {
-                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Id = Convert.ToInt32(userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value),
+                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
                     EmailAdress = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
                     Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
                 };

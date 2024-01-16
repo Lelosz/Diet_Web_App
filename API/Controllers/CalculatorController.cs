@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
@@ -54,6 +55,23 @@ namespace WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("UserCalculatorList")]
+        [Authorize(Roles = "User")]
+        public IActionResult retrieveAllUserCalculatorInformation(int userid)
+        {
+
+            var query = _context.Calculators.AsNoTracking();
+
+            query = query.Where(x => x.UserId == userid);
+
+            if (query != null)
+            {
+                return Ok(query);
+            }
+            return null;
+
         }
     }
 }

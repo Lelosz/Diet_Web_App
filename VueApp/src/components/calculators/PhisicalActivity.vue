@@ -1,6 +1,8 @@
 ﻿<script setup>
     import { ref } from 'vue'
     import { useField, useForm } from 'vee-validate'
+    import { useRouter } from 'vue-router'
+    import store from '@/store/index.js'
 
     const { handleSubmit, handleReset } = useForm({
         validationSchema: {
@@ -45,6 +47,58 @@
     const submit = handleSubmit(values => {
         alert(JSON.stringify(values, null, 3))
     })
+
+    const router = useRouter()
+    const type = ref('')
+    const res = ref(0)
+    const authTokenValue = ref(0)
+
+    const saveResult = async () => {
+
+        try {
+            authTokenValue.value = document.cookie.split(';').find(cookie => cookie.startsWith('token=')).split('=')[1];
+
+
+        } catch (error) {
+            console.log('brak tokenu')
+        }
+        const token = 'Bearer ' + authTokenValue.value
+        res.value = 'Spaliłeś = ' + verifyResult(activity.value.value).toFixed(2) + ' kcal'
+
+
+        if (store.state.userId != null) {
+            await fetch('https://localhost:7011/api/Calculator', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 'Authorization': token
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    Result: res.value,
+                    CalculatorType: 4,
+                    Created: new Date(),
+                    UserId: store.state.userId
+                })
+            }).then((response) => {
+                if (response.ok) {
+                    router.back();
+                }
+                return Promise.reject(response);
+            })
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch((error) => {
+                    console.log('Something went wrong.', error);
+                });
+
+        }
+
+
+
+
+        return "Dane logowania są niepoprawne"
+    }
 
 </script>
 <template>
@@ -101,7 +155,7 @@
                     </v-btn>
                 </v-col>
                 <v-col class="text-right">
-                    <v-btn class="font-weight-bold" color="green" @click="">
+                    <v-btn class="font-weight-bold" color="green" @click="saveResult">
                         Zapisz wynik
                     </v-btn>
                 </v-col>

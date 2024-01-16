@@ -1,6 +1,12 @@
 ﻿<script setup>
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
     import { useField, useForm } from 'vee-validate'
+    import { useRouter } from 'vue-router'
+    import store from '@/store/index.js'
+
+
+    
+    console.log(store.state.userId)
 
     const bmiRange = [
         { name: 'wygłodzenie', from: 10, to: 15.99 },
@@ -28,11 +34,15 @@
         },
     })
 
+    const router = useRouter()
     const weight = useField('weight')
     const height = useField('height')
 
-    let result = ref(0)
-    
+    const type = ref('')
+    const result = ref(0)
+    const res = ref(0)
+    const authTokenValue = ref(0)
+
     const verifyResult = value => {
         return Object.values(bmiRange)
             .find(data => value >= data.from && value <= data.to)?.name || 'brak';
@@ -49,6 +59,57 @@
     //})
 
     //max - width="400"
+
+    const saveResult = async () => {
+
+        try {
+            authTokenValue.value = document.cookie.split(';').find(cookie => cookie.startsWith('token=')).split('=')[1];
+
+
+        } catch (error) {
+            console.log('brak tokenu')
+        }
+        const token = 'Bearer ' + authTokenValue.value
+        type.value = (weight.value.value / ((height.value.value / 100) * (height.value.value / 100))).toFixed(2)
+        res.value = 'BMI = ' + type.value + ', Interpretacja: ' + verifyResult(type.value)
+
+
+        if (store.state.userId != null) {
+            await fetch('https://localhost:7011/api/Calculator', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 'Authorization': token 
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    Result: res.value,
+                    CalculatorType: 0,
+                    Created: new Date(),
+                    UserId: store.state.userId
+                })
+            }).then((response) => {
+                    if (response.ok) {
+                        router.back();
+                    }
+                    return Promise.reject(response);
+                })
+                    .then((result) => {
+                        console.log(result);
+                    })
+                    .catch((error) => {
+                        console.log('Something went wrong.', error);
+                    });
+
+        }
+
+
+
+
+            return "Dane logowania są niepoprawne"
+    }
+
+
+
 </script>
 
 <template>
@@ -102,7 +163,7 @@
                     </v-btn>
                 </v-col>
                 <v-col class="text-right">
-                    <v-btn class="font-weight-bold" color="green" @click="">
+                    <v-btn class="font-weight-bold" color="green" @click="saveResult">
                         Zapisz wynik
                     </v-btn>
                 </v-col>

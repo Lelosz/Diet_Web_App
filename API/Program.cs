@@ -3,12 +3,16 @@ using WebAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,7 +23,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.SecurePolicy = CookieSecurePolicy.None;
-        options.Cookie.HttpOnly = true;
+        //options.Cookie.HttpOnly = true;
         options.Cookie.Name = "token";
 
     })
@@ -36,16 +40,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
-        options.Events.OnMessageReceived = context =>
+        options.Events = new JwtBearerEvents
         {
-            if (context.Request.Cookies.ContainsKey("token"))
+            OnMessageReceived = context =>
             {
                 context.Token = context.Request.Cookies["token"];
+                return Task.CompletedTask;
             }
-            return Task.CompletedTask;
         };
+        //options.Events.OnMessageReceived = context =>
+        //{
+        //    if (context.Request.Cookies.ContainsKey("token"))
+        //    {
+        //        context.Token = context.Request.Cookies["token"];
+        //    }
+        //    return Task.CompletedTask;
+        //};
+        
     });
 builder.Services.AddMvc();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
