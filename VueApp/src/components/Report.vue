@@ -1,11 +1,31 @@
 ﻿<script setup>
     import { onMounted, ref, onBeforeMount } from 'vue'
     import { useRouter } from 'vue-router'
+    import { useField, useForm } from 'vee-validate'
     import store from '@/store/index.js'
     import Chart from 'chart.js/auto'
 
     
     const calculatorNames =  ['BMI','WHR','PPM i CPM', 'Planer wagi', 'Aktywność fizyczna','Kalorie z przekąsek i na pojów']
+    const calculators = [
+        { name: 'BMI'},
+        { name: 'WHR'},
+        { name: 'PPM i CPM' },
+        { name: 'Planer wagi'},
+        { name: 'Aktywność fizyczna' },
+        { name: 'Kalorie z przekąsek i na pojów'},
+    ]
+    const calculatorType = useField('calculatorType')
+
+    const Months = [
+        { name: '01.2024' },
+        { name: '12.2023' },
+        { name: '11.2023' },
+        { name: '10.2023' },
+        { name: '09.2023' },
+        { name: '08.2023' },
+    ]
+    const selectedMonth = useField('selectedMonth')
 
     const authTokenValue = ref(0)
     const userHistory = ref({})
@@ -61,15 +81,16 @@
                 if (dayValue) {labels.push(dayValue); }
                 console.log('PRZYKLAD ' + match[1]);
             }
+            
             console.log(labels);
 
             const data = {
-                labels: labels,
+                labels: labels.reverse(),
                 datasets: [{
-                    label: 'First dataset',
+                    label: 'Kalkulator BMI',
                     backgroundColor: 'rgb(255,99,132)',
                     borderColor: 'rgb(255,99,132)',
-                    data: chartData,
+                    data: chartData.reverse(),
                 }]
             };
             const config = {
@@ -114,17 +135,34 @@
 <template>
     
     <v-card class="mx-auto my-16 w-50" min-width="400" max-width="800">
-        <v-card-title class="mb-6 font-weight-bold text-h5">
-            <div align="center">Raport</div>
+        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
+            Raport
         </v-card-title>
         <v-card-text>
-            <div class="mb-2 font-weight-bold text-subtitle-1" align="left">Wizualizacja</div>
+            <div class="text-h6 ma-4 font-weight-bold" align="left">Wizualizacja</div>
             <div>
-                <v-btn></v-btn>
+                <v-row>
+                    <v-col>
+                        <v-select v-model="calculatorType.value.value"
+                                  :items="calculators"
+                                  item-title="name"
+                                  item-value="name"
+                                  return-object
+                                  label="Rodzaj kalkulatora"></v-select>
+                    </v-col>
+                    <v-col>
+                        <v-select v-model="selectedMonth.value.value"
+                                  :items="Months"
+                                  item-title="name"
+                                  item-value="name"
+                                  label="Miesiąc"></v-select>
+                    </v-col>
+                </v-row>
+                
                 <canvas id="myChart"></canvas>
             </div>
 
-            <div class="mb-2 font-weight-bold text-subtitle-1" align="left">Historia</div>
+            <div class="text-h6 ma-4 font-weight-bold" align="left">Historia</div>
             <v-row>
                 <v-col v-for="item in userHistory"
                        :key="i"
@@ -151,7 +189,7 @@
 
             <v-row>
                 <v-col>
-                    <v-btn class="font-weight-bold" color="red" @click="$router.back()">
+                    <v-btn class="font-weight-bold" variant="outlined" color="red" @click="$router.back()">
                         Wstecz
                     </v-btn>
                 </v-col>

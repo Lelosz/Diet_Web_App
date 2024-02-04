@@ -63,33 +63,35 @@
 </script>
 
 <template>
-    <v-card class="mx-auto my-8" max-width="600">
-        <v-card-title>
+    <v-card class="mx-auto my-16" max-width="600">
+        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
             Zaloguj się
         </v-card-title>
         <v-card-text>
             <v-form @submit.prevent="submit">
                 <v-text-field v-model="login.value.value"
                               label="Nazwa użytkownika"
-                              :error-messages="login.errorMessage.value"
-                              ></v-text-field>
+                              :error-messages="login.errorMessage.value"></v-text-field>
 
                 <v-text-field v-model="password.value.value"
                               type="password"
                               label="Hasło"
-                              :error-messages="password.errorMessage.value"
-                              ></v-text-field>
+                              :error-messages="password.errorMessage.value"></v-text-field>
+                <v-checkbox label="Zapamiętaj mnie"></v-checkbox>
 
-                
                 <v-row>
                     <v-col align-self="start">
-                        <v-btn class="success mx-0 mt-3" type="submit">Zaloguj się</v-btn>
+                        <v-btn class=" mx-0 mt-3" variant="outlined" color="green-accent-3" width="164" type="submit">Zaloguj się</v-btn>
                     </v-col>
 
-                    <v-col align-self="center">Nie masz konta?</v-col>
+                    <v-col align-self="center">
+                        <div class="text-subtitle-1 text-center">
+                            Jeśli nie masz konta
+                        </div>
+                    </v-col>
                     <v-col align-self="end">
                         <router-link to="/SignUp">
-                            <v-btn class="success mx-0 mt-3">Zarejestruj się!</v-btn>
+                            <v-btn class=" mx-0 mt-3" variant="outlined" color="green-accent-3" width="164">Zarejestruj się</v-btn>
                         </router-link>
 
                     </v-col>

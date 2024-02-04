@@ -134,12 +134,16 @@
         return "Dane logowania są niepoprawne"
     }
 
+    const submitted = ref(false)
 
+    const submit = handleSubmit(values => {
+        submitted.value = true
+    })
 
 </script>
 <template>
     <v-card class="mx-auto my-16 w-25" min-width="400" max-width="600">
-        <v-card-title class="mb-6 font-weight-bold">
+        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
             Kalkulator PPM i CPM
         </v-card-title>
         <v-card-text>
@@ -177,6 +181,8 @@
                     <v-col>
                         <v-btn class="me-4"
                                type="submit"
+                               color="green-accent-3"
+                               variant="outlined"
                                @click="resultPPM = verifyResultPPM(gender.value.value)">
                             Oblicz
                         </v-btn>
@@ -192,22 +198,28 @@
 
         </v-card-text>
         <v-card-item>
-            <v-row class="ma-6">
-                <div class="font-weight-bold">
-                    Twój wskaźnik PPM: {{resultPPM}} kcal dziennie
-                    <br />
-                    Twój wskaźnik CPM: {{verifyResultCPM(activitylevel.value.value).toFixed(0)}} kcal dziennie
-                </div>
-                <!-- v-if Zapisz wynik- button, opis wyniku -->
+            <v-row v-if="submitted">
+                <v-col>
+                    <v-card variant="outlined">
+                        <div class="ma-4">
+                            <div class="text-h5 mb-1">
+                                Wynik
+                            </div>
+                            <div>Twój wskaźnik PPM: {{resultPPM}} kcal dziennie</div>
+                            <div>Twój wskaźnik CPM: {{verifyResultCPM(activitylevel.value.value).toFixed(0)}} kcal dziennie</div>
+                        </div>
+                    </v-card>
+                    <!-- v-if Zapisz wynik- button, opis wyniku -->
+                </v-col>
             </v-row>
             <v-row>
                 <v-col>
-                    <v-btn class="font-weight-bold" color="red" @click="$router.back()">
+                    <v-btn class="font-weight-bold" variant="outlined" color="red" @click="$router.back()">
                         Wstecz
                     </v-btn>
                 </v-col>
                 <v-col class="text-right">
-                    <v-btn class="font-weight-bold" color="green" @click="saveResult">
+                    <v-btn v-if="submitted" class="font-weight-bold" variant="outlined" color="green-accent-3" @click="saveResult">
                         Zapisz wynik
                     </v-btn>
                 </v-col>

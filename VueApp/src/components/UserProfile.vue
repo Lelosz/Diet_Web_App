@@ -50,13 +50,12 @@
 
 <template>
     <v-card class="mx-auto my-16"
-            color="teal-lighten-1"
             max-width="500">
         <v-toolbar flat color="teal-darken-1">
             <v-btn icon="mdi-account"></v-btn>
 
             <v-toolbar-title class="font-weight-light">
-                Profil użytkownika
+                Moje konto
             </v-toolbar-title>
 
             <v-spacer></v-spacer>
@@ -117,7 +116,9 @@
             <v-spacer></v-spacer>
 
             <v-btn :disabled="!isEditing"
-                   @click="save">
+                   @click="save"
+                   color="green-accent-3"
+                   variant="outlined">
                 Zapisz
             </v-btn>
         </v-card-actions>
@@ -127,7 +128,7 @@
                     attach
                     position="absolute"
                     location="bottom left">
-            Your profile has been updated
+            Twój profil został zaktualizowany!
         </v-snackbar>
     </v-card>
 </template>

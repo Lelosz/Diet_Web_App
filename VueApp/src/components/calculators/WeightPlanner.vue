@@ -124,6 +124,7 @@
     const id = ref(0)
     const addToTable = value => {
         items.value.push({ id: id.value, type: type.value.value, intensity: intensity.value.value, minutes: minutes.value.value, times: times.value.value, per: per.value.value });
+        activityChange.value = 1.11
         id.value++;
     }
 
@@ -220,7 +221,7 @@
             </template>
 
             <template v-slot:item.2>
-                <v-card title="Podaj wage docelową" flat>
+                <v-card title="Podaj wagę docelową" flat>
 
                     <v-text-field v-model="goalWeight.value.value"
                                   :error-messages="goalWeight.errorMessage.value"
@@ -250,7 +251,7 @@
                                   label="Zmiana w poziomie aktywności fizycznej wyrażona w %"></v-text-field>
                     <span class="">Jeżeli nie wiesz jaką wartość powinieneś wpisać użyj opcji poniżej.</span>
                     <v-spacer></v-spacer>
-                    <v-btn class="font-weight-bold my-6" color="green" @click="overlay = !overlay">
+                    <v-btn class="font-weight-bold my-6" variant="outlined" color="green" @click="overlay = !overlay">
                         Dodaj nową aktywność
                         <v-overlay activator="parent"
                                    location-strategy="connected"
@@ -283,7 +284,7 @@
                                               :error-messages="per.errorMessage.value"
                                               label="W ciągu"></v-select>
 
-                                    <v-btn @click="addToTable()" color="green">Dodaj</v-btn>
+                                    <v-btn @click="addToTable()" variant="outlined" color="green">Dodaj</v-btn>
                                 </v-form>
                             </v-card>
                         </v-overlay>
@@ -374,7 +375,7 @@
                 <v-row>
                     
                     <v-col class="text-right">
-                        <v-btn class="font-weight-bold" color="green" @click="saveResult">
+                        <v-btn class="font-weight-bold" variant="outlined" color="green-accent-3" @click="saveResult">
                             Zapisz wynik
                         </v-btn>
                     </v-col>
@@ -382,5 +383,6 @@
             </template>
 
         </v-stepper>
+
     </v-container>
 </template>

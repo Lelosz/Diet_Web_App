@@ -75,8 +75,8 @@
 </script>
 
 <template>
-    <v-card class="mx-auto my-8" max-width="600">
-        <v-card-title>
+    <v-card class="mx-auto my-16" max-width="600">
+        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
             Zarejestruj się
         </v-card-title>
         <v-card-text>
@@ -99,7 +99,7 @@
                               label="Powtórz hasło"
                               :error-messages="repeatPassword.errorMessage.value"></v-text-field>
 
-                <v-btn class="success mx-0 mt-3" type="submit">Zarejestruj się</v-btn>
+                <v-btn class="success mx-0 mt-3" variant="outlined" color="green-accent-3" type="submit">Zarejestruj się</v-btn>
             </v-form>
         </v-card-text>
     </v-card>

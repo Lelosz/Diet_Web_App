@@ -11,7 +11,7 @@ import LogIn from '@/components/LogIn.vue'
 import SignUp from '@/components/SignUp.vue'
 import Report from '@/components/Report.vue'
 import UserProfile from '@/components/UserProfile.vue'
-
+import Blog from '@/components/Blog.vue'
 
 const routes = [
   {
@@ -58,6 +58,9 @@ const routes = [
         },
         {
             path: '/UserProfile', name: 'UserProfile', component: UserProfile
+        },
+        {
+            path: '/Blog', name: 'Blog', component: Blog
         },
     ],
   },
