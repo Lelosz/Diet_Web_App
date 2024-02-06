@@ -27,6 +27,10 @@
         'Dziennie',
         'Tygodniowo',
     ])
+    //const amountofActivity = [
+    //    { name: 'Dziennie', value: 1 },
+    //    { name: 'Tygodniowo', value: 7 },
+    //]
 
     const activityLevels = [
         { name: 'Brak aktywności, chory, leżący', pal: 1.2 },
@@ -68,6 +72,7 @@
 
 
     const activityChange = useField('activityChange')
+    activityChange.value.value = 0
     const type = useField('type')
     const intensity = useField('intensity')
     const minutes = useField('minutes')
@@ -85,29 +90,43 @@
 
     const dayToReachGoal = ref(1)
 
-    const kgKcalValue = 7700
 
     const activityLevelChange = ref(1)
     const totalActivityLevel= ref(1)
     const CPM = value => {
-        totalActivityLevel.value = activitylevel.value.value * activityLevelChange.value
+        let activityLevel = activitylevel.value.value;
         if (value == 'Mężczyzna')
-            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * totalActivityLevel.value).toFixed(0);
+            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * activityLevel).toFixed(0);
         else
-            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * totalActivityLevel.value).toFixed(0);
+            return ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * activityLevel).toFixed(0);
 
     }
-
-    const CPMGoal = value => {
-        totalActivityLevel.value = activitylevel.value.value * activityLevelChange.value
-        if (value == 'Mężczyzna')
-            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * totalActivityLevel.value).toFixed(0);
-        else
-            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * totalActivityLevel.value).toFixed(0);
-
-    }
-
     
+    const CPMGoal = value => {
+        let activityLevel = activityChange.value.value / 100;
+        console.log(activityLevel)
+        if (value == 'Mężczyzna')
+            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * activityLevel).toFixed(0);
+        else
+            return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * activityLevel).toFixed(0);
+
+    }
+
+    //activityChange.value.value
+    //const CPMtoGoal = value => {
+    //    totalActivityLevel.value = activitylevel.value.value * activityChange.value.value / 100;
+    //    let cpm = CPM(value);
+    //    days = daysToGoal(date);
+    //    return (cpm - ((weight.value.value - goalWeight.value.value) * 7700 / days)).toFixed(0);
+
+    //}
+    function CPMtoGoal(value, days) {
+        let activityLevel = activitylevel.value.value * activityChange.value.value / 100;
+        let cpm = CPMGoal(value);
+        return (cpm - ((weight.value.value - goalWeight.value.value) * 7700 / days)).toFixed(0);
+    }
+
+
     const daysToGoal = value => {
         let Difference_In_Time = value.getTime() - new Date().getTime();
         return Math.round(Difference_In_Time / (1000 * 3600 * 24));
@@ -124,13 +143,68 @@
     const id = ref(0)
     const addToTable = value => {
         items.value.push({ id: id.value, type: type.value.value, intensity: intensity.value.value, minutes: minutes.value.value, times: times.value.value, per: per.value.value });
-        activityChange.value = 1.11
+        let finalChange = 1;
+        let pal = activitylevel.value.value; //start pal value
+        let allItems = Object.values(items)[3];
+        let totalChange = 0;
+        for (let i = 0; i < allItems.length; i++) {
+            let change = 0;
+            let METminutes = Number(allItems[i].times) * Number(allItems[i].minutes) * allItems[i].intensity;
+            if (allItems[i].type == 'Dodaj') {
+                change = change + METminutes;
+            } else {
+                change = change - METminutes;
+            }
+
+            if (allItems[i].per == 'Dziennie') {
+                totalChange = totalChange + (change * 7 / 1440);
+            } else {
+                totalChange = totalChange + (change * 7 / 10080);
+            }
+        }
+        
+        //o = allItems[allItems.length - 1].id;
+        //console.log(o);
+
+
+        console.log(Object.values(items)[3]);
+        finalChange = Math.round(((totalChange + pal) / pal) * 100);
+        console.log(finalChange);
+        activityChange.value.value = finalChange;
         id.value++;
     }
 
 
     function removeItem(index) {
         items.value.splice(index, 1);
+        let finalChange = 1;
+        let pal = activitylevel.value.value; //start pal value
+        let allItems = Object.values(items)[3];
+        let totalChange = 0;
+        for (let i = 0; i < allItems.length; i++) {
+            let change = 0;
+            let METminutes = Number(allItems[i].times) * Number(allItems[i].minutes) * allItems[i].intensity;
+            if (allItems[i].type == 'Dodaj') {
+                change = change + METminutes;
+            } else {
+                change = change - METminutes;
+            }
+
+            if (allItems[i].per == 'Dziennie') {
+                totalChange = totalChange + (change * 7 / 1440);
+            } else {
+                totalChange = totalChange + (change * 7 / 10080);
+            }
+        }
+
+        //o = allItems[allItems.length - 1].id;
+        //console.log(o);
+
+
+        console.log(Object.values(items)[3]);
+        finalChange = Math.round(((totalChange + pal) / pal) * 100);
+        console.log(finalChange);
+        activityChange.value.value = finalChange;
     }
 
 
@@ -246,7 +320,6 @@
             <template v-slot:item.3>
                 <v-card title="Zmiana poziomu aktywności fizycznej (Opcjonalne)" flat>
                     <v-text-field v-model="activityChange.value.value"
-                                  model-value="0"
                                   :error-messages="activityChange.errorMessage.value"
                                   label="Zmiana w poziomie aktywności fizycznej wyrażona w %"></v-text-field>
                     <span class="">Jeżeli nie wiesz jaką wartość powinieneś wpisać użyj opcji poniżej.</span>
@@ -267,7 +340,7 @@
                                     <v-select v-model="intensity.value.value"
                                               :items="physicalActivities"
                                               item-title="name"
-                                              item-value="name"
+                                              item-value="mets"
                                               :error-messages="intensity.errorMessage.value"
                                               label="Intensywność"></v-select>
 
@@ -281,6 +354,8 @@
 
                                     <v-select v-model="per.value.value"
                                               :items="amountofActivity"
+                                              item-title="name"
+                                              item-value="value"
                                               :error-messages="per.errorMessage.value"
                                               label="W ciągu"></v-select>
 
@@ -355,7 +430,7 @@
                         <v-card class="my-4" variant="outlined">
                             <div class="ma-4">
                                 <div class="text-h6 mb-1">
-                                    {{}} kcal
+                                    {{CPMtoGoal(gender.value.value, daysToGoal(date))}} kcal
                                 </div>
                                 <div class="text-caption">Tyle powinieneś spożywać aby osiągnąć swój cel:{{goalWeight.value.value}} kg w czasie {{daysToGoal(date)}} dni.</div>
                             </div>
