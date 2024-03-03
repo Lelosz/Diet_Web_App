@@ -1,10 +1,10 @@
 ﻿<script setup>
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
     import { useField, useForm } from 'vee-validate'
     import { useRouter } from 'vue-router'
     import store from '@/store/index.js'
 
-   
+    console.log(store.state.userId)
     const physicalActivities = [
         { name: 'leżenie w łóżku', mets: 1 },
         { name: 'chodzenie', mets: 2 },
@@ -70,6 +70,7 @@
     currentDate.setDate(currentDate.getDate() + 2)
     const minDate = ref(currentDate.toISOString().split('T')[0])
 
+    const daysUntilGoal = ref(1);
 
     const activityChange = useField('activityChange')
     activityChange.value.value = 0
@@ -103,7 +104,8 @@
     }
     
     const CPMGoal = value => {
-        let activityLevel = activityChange.value.value / 100;
+        let newActivity = activityChange.value.value / 7;
+        let activityLevel = activitylevel.value.value + (activitylevel.value.value * newActivity /100 );
         console.log(activityLevel)
         if (value == 'Mężczyzna')
             return ((9.99 * goalWeight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * activityLevel).toFixed(0);
@@ -112,23 +114,23 @@
 
     }
 
-    //activityChange.value.value
-    //const CPMtoGoal = value => {
-    //    totalActivityLevel.value = activitylevel.value.value * activityChange.value.value / 100;
-    //    let cpm = CPM(value);
-    //    days = daysToGoal(date);
-    //    return (cpm - ((weight.value.value - goalWeight.value.value) * 7700 / days)).toFixed(0);
-
-    //}
+    
     function CPMtoGoal(value, days) {
-        let activityLevel = activitylevel.value.value * activityChange.value.value / 100;
-        let cpm = CPMGoal(value);
+        //let activityLevel = activitylevel.value.value * activityChange.value.value / 100;
+        let cpm;
+        let newActivity= activityChange.value.value / 7;
+        let activityLevel = activitylevel.value.value + (activitylevel.value.value * newActivity / 100);
+        if (value == 'Mężczyzna')
+            cpm = ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value + 5) * activityLevel);
+        else
+            cpm = ((9.99 * weight.value.value + 6.25 * height.value.value - 4.92 * age.value.value - 161) * activityLevel);
         return (cpm - ((weight.value.value - goalWeight.value.value) * 7700 / days)).toFixed(0);
     }
 
 
-    const daysToGoal = value => {
+    function daysToGoal(value) {
         let Difference_In_Time = value.getTime() - new Date().getTime();
+        daysUntilGoal.value = Difference_In_Time;
         return Math.round(Difference_In_Time / (1000 * 3600 * 24));
     }
 
@@ -159,7 +161,7 @@
             if (allItems[i].per == 'Dziennie') {
                 totalChange = totalChange + (change * 7 / 1440);
             } else {
-                totalChange = totalChange + (change * 7 / 10080);
+                totalChange = totalChange + (change / 1440);
             }
         }
         
@@ -168,7 +170,7 @@
 
 
         console.log(Object.values(items)[3]);
-        finalChange = Math.round(((totalChange + pal) / pal) * 100);
+        finalChange = ((((totalChange + pal) / pal) * 100)-100).toFixed(0);
         console.log(finalChange);
         activityChange.value.value = finalChange;
         id.value++;
@@ -212,7 +214,7 @@
     const res = ref(0)
     const authTokenValue = ref(0)
 
-    const saveResult = async () => {
+    async function saveResult() {
 
         try {
             authTokenValue.value = document.cookie.split(';').find(cookie => cookie.startsWith('token=')).split('=')[1];
@@ -222,7 +224,7 @@
             console.log('brak tokenu')
         }
         const token = 'Bearer ' + authTokenValue.value
-        res.value = 'Aby utrzymać obecną wagę = ' + CPM(gender.value.value) + ', aby osiągnąć cel = ' + 1 + ', aby utrzymać cel' + CPMGoal(gender.value.value)
+        res.value = 'Aby utrzymać obecną wagę ' + weight.value.value + 'kg = ' + CPM(gender.value.value) + ', aby osiągnąć cel ' + goalWeight.value.value +'kg = ' + CPMtoGoal(gender.value.value, daysUntilGoal.value) + ', aby utrzymać cel = ' + CPMGoal(gender.value.value)
 
 
         if (store.state.userId != null) {
