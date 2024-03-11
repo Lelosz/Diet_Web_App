@@ -12,6 +12,8 @@ import SignUp from '@/components/SignUp.vue'
 import Report from '@/components/Report.vue'
 import UserProfile from '@/components/UserProfile.vue'
 import Blog from '@/components/Blog.vue'
+import BlogPost from '@/components/BlogPost.vue'
+import CreateBlogPost from '@/components/CreateBlogPost.vue'
 
 const routes = [
   {
@@ -61,6 +63,12 @@ const routes = [
         },
         {
             path: '/Blog', name: 'Blog', component: Blog
+        },
+        {
+            path: '/Blog/BlogPost/:postId', name: 'BlogPost', component: BlogPost
+        },
+        {
+            path: '/Blog/CreateBlogPost', name: 'CreateBlogPost', component: CreateBlogPost
         },
     ],
   },

@@ -59,7 +59,7 @@
                                             {{item.description}}
                                         </div>
                                         <div class="mt-3">
-                                            <router-link :to="'/CalculatorList/' + item.link">
+                                            <router-link :to="{ name: 'BlogPost', params: { postId: '123' }}">
                                                 <v-btn class="font-weight-bold" variant="outlined" color="green-accent-3">
                                                     Czytaj dalej
                                                 </v-btn>

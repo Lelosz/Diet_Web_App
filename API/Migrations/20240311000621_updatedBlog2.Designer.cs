@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -11,9 +12,11 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240311000621_updatedBlog2")]
+    partial class updatedBlog2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BlogComments");
+                    b.ToTable("BlogComment");
                 });
 
             modelBuilder.Entity("WebAPI.Models.BlogPost", b =>
@@ -75,9 +78,6 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Archivized")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -101,7 +101,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BlogPosts");
+                    b.ToTable("BlogPost");
                 });
 
             modelBuilder.Entity("WebAPI.Models.BlogReply", b =>
@@ -116,7 +116,7 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CommentId")
+                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -130,7 +130,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("BlogReplys");
+                    b.ToTable("BlogReply");
                 });
 
             modelBuilder.Entity("WebAPI.Models.CalculatorModel", b =>
@@ -217,7 +217,9 @@ namespace WebAPI.Migrations
                 {
                     b.HasOne("WebAPI.Models.BlogComment", "Comment")
                         .WithMany("Replies")
-                        .HasForeignKey("CommentId");
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Comment");
                 });

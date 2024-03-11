@@ -7,6 +7,9 @@ namespace WebAPI.Data
     {
         public DbSet<UserModel> Users { get; set; }
         public DbSet<CalculatorModel> Calculators { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<BlogComment> BlogComments { get; set; }
+        public DbSet<BlogReply> BlogReplys { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

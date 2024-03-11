@@ -10,5 +10,7 @@
 
         public ICollection<CalculatorModel> Calculators { get; } = new List<CalculatorModel>();
 
+        public ICollection<BlogPost> BlogPosts { get; } = new List<BlogPost>();
+        public ICollection<BlogComment> BlogComments { get; } = new List<BlogComment>();
     }
 }

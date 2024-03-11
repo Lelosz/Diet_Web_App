@@ -30,6 +30,7 @@
             if (userData) {
                 store.commit('loginStatus', true)
                 store.commit('userId', userData.id)
+                console.log(userData.username)
             } else {
                 store.commit('loginStatus', false)
             }
