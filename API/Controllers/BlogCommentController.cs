@@ -77,7 +77,10 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
-
+            if (comment.DislikedByUser)
+            {
+                return Ok();
+            }
                 
             if (comment.LikedByUser)
             {
@@ -107,7 +110,11 @@ namespace WebAPI.Controllers
                 return NotFound();
             }
 
-               
+            if (comment.LikedByUser)
+            {
+                return Ok();
+            }
+
             if (comment.DislikedByUser)
             {
                 comment.TotalDislikes--;

@@ -6,8 +6,8 @@
         public String Author { get; set; }
         public String CommentContent { get; set; }
         public DateTime Created { get; set; }
-        public int TotalLikes { get; set; } 
-        public int TotalDislikes { get; set; } 
+        public int TotalLikes { get; set; } = 0;
+        public int TotalDislikes { get; set; } = 0;
 
         public bool LikedByUser { get; set; } = false;
         public bool DislikedByUser { get; set; } = false;

@@ -66,18 +66,18 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("Administrator")]
-        [Authorize(Roles = "Administrator")]
-        public IActionResult AdminsEndpoint()
-        {
-            var currentUser = GetCurrentUser();
-            return Ok(currentUser);
-        }
+        //[HttpGet("Administrator")]
+        //[Authorize(Roles = "Administrator")]
+        //public IActionResult AdminsEndpoint()
+        //{
+        //    var currentUser = GetCurrentUser();
+        //    return Ok(currentUser);
+        //}
 
         
 
         [HttpGet("User")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public IActionResult retrieveUserInformation()
         {
             //var token = Request.Cookies["jwt"];

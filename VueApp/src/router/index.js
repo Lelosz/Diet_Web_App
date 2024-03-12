@@ -14,6 +14,8 @@ import UserProfile from '@/components/UserProfile.vue'
 import Blog from '@/components/Blog.vue'
 import BlogPost from '@/components/BlogPost.vue'
 import CreateBlogPost from '@/components/CreateBlogPost.vue'
+import EditBlogPost from '@/components/EditBlogPost.vue'
+
 
 const routes = [
   {
@@ -69,6 +71,9 @@ const routes = [
         },
         {
             path: '/Blog/CreateBlogPost', name: 'CreateBlogPost', component: CreateBlogPost
+        },
+        {
+            path: '/Blog/EditBlogPost/:postId', name: 'EditBlogPost', component: EditBlogPost
         },
     ],
   },

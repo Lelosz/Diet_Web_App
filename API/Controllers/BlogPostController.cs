@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> UpdatePost(int id, BlogPost blogPost)
         {
-            if (id != blogPost.Id) return BadRequest();
+            if (id != blogPost.Id) return BadRequest("Blog ID mismatch");
 
             _context.Entry(blogPost).State = EntityState.Modified;
             await _context.SaveChangesAsync();

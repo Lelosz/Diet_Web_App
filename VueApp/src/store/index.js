@@ -4,7 +4,9 @@ import Vuex from 'vuex';
 const store = new Vuex.Store({
     state: {
         loginStatus: false,
-        userId: null
+        userId: null,
+        userName: null,
+        userRole: null
     },
     mutations: {
         loginStatus(state, val) {
@@ -12,6 +14,12 @@ const store = new Vuex.Store({
         },
         userId(state, val) {
             state.userId = val
+        },
+        userName(state, val) {
+            state.userName = val
+        },
+        userRole(state, val) {
+            state.userRole = val
         }
     }
 });

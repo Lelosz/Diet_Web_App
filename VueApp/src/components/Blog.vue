@@ -1,16 +1,59 @@
 ﻿<script setup>
     import { ref, onMounted } from 'vue'
-    const items = ref(
-        [
-            { name: 'Health effects of dietary risks in 195 countries, 1990–2017', description: 'Suboptimal diet is an important preventable risk factor for non-communicable diseases (NCDs); however, its impact on the burden of NCDs has not been systematically evaluated. This study aimed to evaluate the consumption of major foods and nutrients across 195 countries and to quantify the impact of their...', link: 'BMI' },
-            { name: 'Dementia prevention, intervention, and care', description: 'Executive summary The number of older people, including those living with dementia, is rising, as younger age mortality declines. However, the age-specific incidence of dementia has fallen in many countries, probably because of improve...', link: 'WHR' },
-            { name: 'Social Relationships and Mortality Risk', description: 'Social relationships, or the relative lack thereof, constitute a major risk factor for health—rivaling the effect of well established health risk factors such as cigarette smoking, blood pressure, blood lipids, obesity and physical...', link: 'PPMCPM' },
-            { name: 'Ultra-Processed Diets Cause Excess Calorie Intake and Weight Gain', description: 'We investigated whether ultra-processed foods affect energy intake in 20 weight-stable adults, aged (mean ± SE) 31.2 ± 1.6 years and BMI = 27 ± 1.5 kg/m2. Subjects were admitted to the NIH Clinical Center and randomized to receive either ultra-processed or unprocessed diets for 2 weeks...', link: 'WeightPlanner' },
-            { name: 'Dietary carbohydrate intake and mortality', description: 'Summary Background Low carbohydrate diets, which restrict carbohydrate in favour of increased protein or fat intake, or both, are a popular weight-loss strategy. However, the long-term effect of carbohydrate restriction on mortality is...', link: 'PhisicalActivity' },
-            { name: 'Artificial sweeteners induce glucose intolerance by altering the gut microbiota', description: 'Non-caloric artificial sweeteners (NAS) are among the most widely used food additives worldwide, regularly consumed by lean and obese individuals alike. NAS consumption is considered safe and beneficial owing to their low caloric content, yet supporting scientific data remain sparse and...', link: 'FoodCalories' }
-        ]
-    )
+    import { useRouter } from 'vue-router'
+    import store from '@/store/index.js'
 
+    const items = ref([])
+    const authTokenValue = ref(0)
+    const PostList = ref([])
+    const li = ref([])
+    const isAdmin = ref(0)
+
+    if (store.state.userRole == 'Administrator') { isAdmin.value = 1; }
+
+    onMounted(async () => {
+
+        try {
+            authTokenValue.value = document.cookie.split(';').find(cookie => cookie.startsWith('token=')).split('=')[1];
+
+
+        } catch (error) {
+            console.log('brak tokenu')
+        }
+        const token = 'Bearer ' + authTokenValue.value;
+
+
+        if (store.state.userId != null) {
+            let response = await fetch('https://localhost:7011/api/BlogPost/PostList', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 'Authorization': token
+                },
+                credentials: 'include'
+
+            });
+            let resp = await response.json()
+            PostList.value = resp.slice().reverse()
+
+        }
+        console.log("lista wpisow", PostList.value);
+        let userPostList = [];
+        let adminPostList = [];
+        for (const i in PostList.value) {
+            if (PostList.value[i].archivized) {
+                adminPostList.push({id: PostList.value[i].id, title: PostList.value[i].title, content: PostList.value[i].postContent.slice(0, 201) });
+            } else {
+                userPostList.push({ id: PostList.value[i].id, title: PostList.value[i].title, content: PostList.value[i].postContent.slice(0, 201) });
+                adminPostList.push({ id: PostList.value[i].id, title: PostList.value[i].title, content: PostList.value[i].postContent.slice(0, 201) });
+            }
+        }
+        if (isAdmin.value) { li.value = adminPostList; } else { li.value = userPostList; }
+        
+
+        console.log('po przetworzeniu', li.value)
+
+        return "Dane logowania są niepoprawne";
+    });
 
 </script>
 
@@ -37,6 +80,11 @@
 
                         </div>
                     </v-form>
+                    <router-link to="/Blog/CreateBlogPost" v-if="isAdmin">
+                        <v-btn class="font-weight-bold" variant="outlined" color="orange">
+                            Stwórz wpis
+                        </v-btn>
+                    </router-link>
                 </div>
                 <v-divider></v-divider>
                 <v-divider></v-divider>
@@ -44,24 +92,28 @@
                 <v-divider></v-divider>
                 <v-container>
                     <v-row>
-                        <v-col v-for="item in items"
+                        <v-col v-for="item in li"
                                :key="i"
                                cols="12">
                             <v-card class="mx-auto"
                                     variant="outlined">
                                 <v-card-item>
                                     <div class="ma-2">
-                                        {{ name }}
                                         <div class="text-h6 mb-1">
-                                            {{item.name}}
+                                            {{item.title}}
                                         </div>
                                         <div>
-                                            {{item.description}}
+                                            {{item.content}} ...
                                         </div>
                                         <div class="mt-3">
-                                            <router-link :to="{ name: 'BlogPost', params: { postId: '123' }}">
+                                            <router-link :to="{ name: 'BlogPost', params: { postId: item.id }}">
                                                 <v-btn class="font-weight-bold" variant="outlined" color="green-accent-3">
                                                     Czytaj dalej
+                                                </v-btn>
+                                            </router-link>
+                                            <router-link :to="{ name: 'EditBlogPost', params: { postId: item.id }}" v-if="isAdmin">
+                                                <v-btn class="font-weight-bold" variant="outlined" color="orange">
+                                                    Edytuj wpis
                                                 </v-btn>
                                             </router-link>
                                         </div>

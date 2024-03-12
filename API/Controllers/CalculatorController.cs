@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("UserCalculatorList")]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = "User")]
         public IActionResult retrieveAllUserCalculatorInformation(int userid)
         {
 

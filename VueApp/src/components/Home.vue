@@ -30,6 +30,8 @@
             if (userData) {
                 store.commit('loginStatus', true)
                 store.commit('userId', userData.id)
+                store.commit('userRole', userData.role)
+                store.commit('userName', userData.username)
                 console.log(userData.username)
             } else {
                 store.commit('loginStatus', false)
