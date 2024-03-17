@@ -76,7 +76,7 @@
 
 <template>
     <v-card class="mx-auto my-16" max-width="600">
-        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
+        <v-card-title class="text-center text-h4 ma-6 font-weight-bold">
             Zarejestruj się
         </v-card-title>
         <v-card-text>

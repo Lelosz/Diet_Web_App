@@ -131,5 +131,17 @@ namespace WebAPI.Controllers
             }
             return null;
         }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "User,Administrator")]
+        public async Task<IActionResult> UpdatePost(int id, UserModel userModel)
+        {
+            if (id != userModel.Id) return BadRequest("Blog ID mismatch");
+
+            _context.Entry(userModel).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
+    }
 }

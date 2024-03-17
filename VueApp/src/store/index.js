@@ -1,5 +1,5 @@
 import Vuex from 'vuex';
-
+import createPersistedState from "vuex-persistedstate";
 
 const store = new Vuex.Store({
     state: {
@@ -21,7 +21,26 @@ const store = new Vuex.Store({
         userRole(state, val) {
             state.userRole = val
         }
-    }
+    },
+    actions: {
+        loadFromLocalStorage({ commit }) {
+            const storedState = localStorage.getItem('app-state');
+            if (storedState) {
+                commit('setState', JSON.parse(storedState));
+            }
+        },
+        saveToLocalStorage({ state }) {
+            localStorage.setItem('app-state', JSON.stringify(state));
+        },
+    }, plugins: [
+        createPersistedState({
+            storage: {
+                getItem: key => localStorage.getItem(key),
+                setItem: (key, value) => localStorage.setItem(key, value),
+                removeItem: key => localStorage.removeItem(key),
+            },
+        }),
+    ],
 });
 
 export default store

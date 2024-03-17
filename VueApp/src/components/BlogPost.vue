@@ -5,7 +5,7 @@
 
 
     const page = ref(1);
-    const pageNumber = ref(1)
+    const pageNumber = ref(1);
     const pageLength = ref(5);
     const route = useRoute();
     const authTokenValue = ref(0)
@@ -55,7 +55,7 @@
         postTitle.value = postData.value.title;
         postContent.value = postData.value.postContent;
         postAuthor.value = postData.value.author
-        console.log('title', postTitle.value)
+        console.log('title', postContent.value)
 
         getComments();
 
@@ -338,8 +338,7 @@
                                         variant="outlined"
                                         >
                                     <v-card-item>
-                                        <div class="ma-2">
-                                            {{postContent}}
+                                        <div v-html="postContent" class="ma-2" style="white-space: pre-wrap;">
                                         </div>
                                     </v-card-item>
                                 </v-card>
@@ -369,10 +368,15 @@
                                         variant="outlined">
                                     <v-card-item>
                                         <div class="ma-2">
-                                            {{comment.author}}, {{comment.date}}
-                                            <div class="text-h6 mb-1">
-                                                {{ comment.content }}
-                                            </div>
+                                            <v-tooltip text="Komentarz wystawiony przez twórcę posta">
+                                                <template v-slot:activator="{ props }">
+                                                    <v-btn v-if="comment.author == postAuthor" v-bind="props" class="font-weight-bold" color="teal-darken-1">OP</v-btn>
+                                                </template>
+                                            </v-tooltip>
+                                             {{comment.author}}, {{comment.date}}
+                                        <div class="text-h6 mb-1">
+                                            {{ comment.content }}
+                                        </div>
 
                                             <div class="mt-3">
                                                 <v-btn class="font-weight-bold text-h6" prepend-icon="mdi-thumb-up-outline" @click="likeComment(comment.id)">
@@ -403,6 +407,11 @@
                                                     variant="outlined">
                                                 <v-card-item>
                                                     <div class="ma-2">
+                                                        <v-tooltip text="Komentarz wystawiony przez twórcę posta">
+                                                            <template v-slot:activator="{ props }">
+                                                                <v-btn v-if="comment.author == postAuthor" v-bind="props" class="font-weight-bold" color="teal-darken-1">OP</v-btn>
+                                                            </template>
+                                                        </v-tooltip>
                                                         {{reply.author}}, {{reply.createdDate}}
                                                         <div class="text-h6 mb-1">
                                                             {{ reply.replyContent }}

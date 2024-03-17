@@ -67,6 +67,10 @@
 
 
         if (store.state.userId != null) {
+
+            let processedPostContent = postContent.value;
+            //processedPostContent = processedPostContent.replace(/\n/g, '<br />');
+
             await fetch('https://localhost:7011/api/BlogPost/' + route.params.postId , {
                 method: 'PUT',
                 headers: {
@@ -77,7 +81,7 @@
                     "id": route.params.postId,
                     "author": store.state.userName,
                     "title": postTitle.value,
-                    "postContent": postContent.value,
+                    "postContent": processedPostContent,
                     "created": new Date(),
                     "archivized": archivized.value,
                     "userId": store.state.userId
@@ -124,11 +128,11 @@
                     <v-checkbox v-model="archivized" @click="archivized = !archivized">
                         <template v-slot:label>
                             <div>
-                                Zarchiwizuj
+                                Ukryj post
                             </div>
                         </template>
                     </v-checkbox>
-                    <v-row>
+                    <v-row> 
                         <v-col>
                             <v-btn class="font-weight-bold" variant="outlined" color="red" @click="$router.back()">
                                 Wstecz

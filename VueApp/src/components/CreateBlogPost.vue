@@ -7,6 +7,7 @@
     const postTitle = ref('');
     const postContent = ref('');
     const authTokenValue = ref(0)
+    const archivized = ref(true);
 
     console.log('N',store.state.userName)
     console.log('R',store.state.userRole)
@@ -35,7 +36,7 @@
                     "title": postTitle.value,
                     "postContent": postContent.value,
                     "created": new Date(),
-                    "archivized": false,
+                    "archivized": archivized.value,
                     "userId": store.state.userId
                 })
             }).then((response) => {
@@ -76,7 +77,13 @@
                     <v-form width="600">
                         <v-text-field v-model="postTitle" variant="outlined" label="Tytuł"></v-text-field>
                         <v-textarea v-model="postContent" variant="outlined" rows="10" auto-grow label="Treść"></v-textarea>
-
+                        <v-checkbox v-model="archivized" @click="archivized = !archivized">
+                            <template v-slot:label>
+                                <div>
+                                    Ukryj post
+                                </div>
+                            </template>
+                        </v-checkbox>
                         <v-row>
                             <v-col>
                                 <v-btn class="font-weight-bold" variant="outlined" color="red" @click="$router.back()">
@@ -90,7 +97,7 @@
                             </v-col>
                         </v-row>
 
-                       
+
                     </v-form>
                 </div>
                 

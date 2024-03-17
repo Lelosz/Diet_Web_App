@@ -64,7 +64,7 @@
 
 <template>
     <v-card class="mx-auto my-16" max-width="600">
-        <v-card-title class="text-center text-h5 ma-4 font-weight-bold">
+        <v-card-title class="text-center text-h4 ma-6 font-weight-bold">
             Zaloguj się
         </v-card-title>
         <v-card-text>
@@ -77,9 +77,9 @@
                               type="password"
                               label="Hasło"
                               :error-messages="password.errorMessage.value"></v-text-field>
-                <v-checkbox label="Zapamiętaj mnie"></v-checkbox>
+                
 
-                <v-row>
+                <v-row class="mt-6">
                     <v-col align-self="start">
                         <v-btn class=" mx-0 mt-3" variant="outlined" color="green-accent-3" width="164" type="submit">Zaloguj się</v-btn>
                     </v-col>

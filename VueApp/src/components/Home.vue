@@ -33,6 +33,7 @@
                 store.commit('userRole', userData.role)
                 store.commit('userName', userData.username)
                 console.log(userData.username)
+                store.saveToLocalStorage;
             } else {
                 store.commit('loginStatus', false)
             }

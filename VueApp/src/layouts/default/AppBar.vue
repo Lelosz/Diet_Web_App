@@ -3,7 +3,7 @@
     import { useTheme } from 'vuetify';
     import store from '@/store/index.js'
 
-    
+    store.loadFromLocalStorage;
     const loginState = computed(() => store.state.loginStatus);
     const darkTheme = ref(false);
     const theme = useTheme();
@@ -23,6 +23,8 @@
         });
         store.commit('loginStatus', false)
         store.commit('userId', null)
+        store.commit('userRole', null)
+        store.commit('userName', null)
         console.log("wylogowany")
     }
 
